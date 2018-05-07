@@ -1,13 +1,321 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-01-09T12:29:18-02:00</updated><id>http://localhost:4000/</id><title type="html">Vinícius Morais Silva</title><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2018/01/09/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2018-01-09T09:12:32-02:00</published><updated>2018-01-09T09:12:32-02:00</updated><id>http://localhost:4000/jekyll/update/2018/01/09/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2018/01/09/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-05-07T12:37:23-03:00</updated><id>http://localhost:4000/</id><title type="html">Vinícius Morais Silva</title><entry><title type="html">PostgreSQL Replication and Load Balancing with pgpool-II</title><link href="http://localhost:4000/jekyll/update/2018/05/07/pgpool.html" rel="alternate" type="text/html" title="PostgreSQL Replication and Load Balancing with pgpool-II" /><published>2018-05-07T08:12:32-03:00</published><updated>2018-05-07T08:12:32-03:00</updated><id>http://localhost:4000/jekyll/update/2018/05/07/pgpool</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2018/05/07/pgpool.html">&lt;p&gt;MONTANDO OS CLUSTERS:&lt;/p&gt;
 
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+&lt;p&gt;Maquina 1 : Master : (&lt;code class=&quot;highlighter-rouge&quot;&gt;10.0.0.1&lt;/code&gt;)&lt;/p&gt;
 
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+&lt;p&gt;Maquina 2 : Slave :  (&lt;code class=&quot;highlighter-rouge&quot;&gt;10.0.0.2&lt;/code&gt;)&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;Maquina 3 : Pgpool : (&lt;code class=&quot;highlighter-rouge&quot;&gt;10.0.0.3&lt;/code&gt;)&lt;/p&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
+&lt;h1 id=&quot;especificações&quot;&gt;Especificações:&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;postgresql - version 10.0&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;pgpool     - version 3.7&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;ubuntu     - 16.04&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Montando as maquinas:&lt;/p&gt;
+
+&lt;h2 id=&quot;maquina-1--master--10001&quot;&gt;Maquina 1 : MASTER : 10.0.0.1&lt;/h2&gt;
+
+&lt;h4 id=&quot;11---instalar-o-postgres-10&quot;&gt;1.1 - Instalar o postgres-10&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get install postgresql-10&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Caso venha a usar uma versão diferente lembre-se que as maquinas devem estar na mesma versao&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;1.1.1 - Caso não tenha o pacote do postgresql-10:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ echo 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main' &amp;gt;&amp;gt; /etc/apt/sources.list.d/pgdg.list
+$ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+$ sudo apt-get update
+$ sudo apt-get install postgresql-10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Caso ainda nao consiga pesquise na internet outro metodo ou instale uma versao diferente&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;12---criar-um-usuario-no-banco-de-dados&quot;&gt;1.2 - Criar um usuario no banco de dados.&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo su - postgres
+$ createuser -P pgpool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Preste atencao neste usuario ele será importante em todos as etapas&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;13---mudar-as-configurações-do-postgresql&quot;&gt;1.3 - Mudar as configurações do postgresql:&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Altere ou adicione se caso não exister as seguintes configurações:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/postgresql/10/main/postgresql.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listen_addresses = 'localhost,10.0.0.1'
+wal_level = hot_standby
+max_replication_slots = 3
+max_wal_senders = 3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Reinicie para aplicar as configurações&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo service postgresql restart&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;14---mudar-as-configurações-das-permissões-de-conexão-do-postgres&quot;&gt;1.4 - Mudar as configurações das permissões de conexão do postgres:&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Altere ou adicione se caso não existir&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/postgresql/10/main/pg_hba.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; local   all           postgres                 peer
+ local   all           all                      peer
+ host    all           all        127.0.0.1/32  md5
+ host    all           all        ::1/128       md5
+ host    replication   all        10.0.0.2/32   trust   # the slave
+ host    postgres      pgpool     10.0.0.3/32   trust   # the client
+ host    all           all        10.0.0.3/32   md5     # the client
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Reinicie para aplicar as configurações&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo service postgresql restart&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;15---criar-um-slot-para-o-slave&quot;&gt;1.5 - Criar um slot para o slave:&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo su - postgres
+$ psql
+$ select * from pg_create_physical_replication_slot('theslave');
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Reinicie para aplicar as configurações&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo service postgresql restart&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;maquina-2--slave--10002&quot;&gt;Maquina 2 : SLAVE : 10.0.0.2&lt;/h2&gt;
+
+&lt;h4 id=&quot;21---instalar-o-postgres-10&quot;&gt;2.1 - Instalar o postgres-10&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo apt-get install postgresql-10&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Caso venha a usar uma versão diferente lembre-se que as maquinas devem estar na mesma versão&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;23---mudar-as-configurações-dos-postgresql&quot;&gt;2.3 - Mudar as configurações dos postgresql:&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Altere ou adicione se caso não exister as seguintes configurações:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/postgresql/10/main/postgresql.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listen_addresses = 'localhost,10.0.0.2'
+wal_level = hot_standby
+hot_standby = on
+hot_standby_feedback = on
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Reinicie para aplicar as configurações&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo service postgresql restart&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;24---mudar-as-configurações-das-permissões-de-conexão-do-postgres&quot;&gt;2.4 - Mudar as configurações das permissões de conexão do postgres:&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Altere ou adicione se caso não existir&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/postgresql/10/main/pg_hba.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; local   all           postgres                 peer
+ local   all           all                      peer
+ host    all           all        127.0.0.1/32  md5
+ host    all           all        ::1/128       md5
+ host    postgres      pgpool     10.0.0.3/32   trust   # the client
+ host    all           all        10.0.0.3/32   md5     # the client
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Reinicie para aplicar as configurações
+&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo service postgresql restart&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;25---criar-um-usuario-no-banco-de-dados-foi-criado-o-usuario-com-o-nome-pgpool&quot;&gt;2.5 - Criar um usuario no banco de dados, foi criado o usuario com o nome pgpool&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo su - postgres
+$ createuser -P pgpool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Preste atencao neste usuario ele será importante em todos as etapas&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;26---fazer-a-replicação&quot;&gt;2.6 - Fazer a replicação:&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo service postgresql stop
+$ sudo su - postgres
+$ cd 10/
+$ rm -rf main
+$ pg_basebackup -v -D main -R -P -h 10.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Volte o serviço do postgres&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo service postgresql start&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;maquina-3--pgpool--10003&quot;&gt;Maquina 3 : pgpool : 10.0.0.3&lt;/h2&gt;
+
+&lt;h4 id=&quot;33---instale-o-postgresql-client-10&quot;&gt;3.3 - Instale o postgresql-client-10&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo apt-get install postgresql-client-10$&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Lembre-se, que deve ser o cliente e nao o serviço&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3.4 Instale o pgpool2&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo apt-get install pgpool2&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;35---mudar-as-configurações-do-pgpool2&quot;&gt;3.5 - Mudar as configurações do pgpool2&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/pgpool2/pgpool.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listen_addresses = ''
+port = 5432
+
+backend_hostname0 = '10.0.0.1'
+backend_port0 = 5432
+backend_weight0 = 1
+backend_flag0 = 'DISALLOW_TO_FAILOVER'
+
+backend_hostname1 = '10.0.0.2
+backend_port1 = 5432
+backend_weight1 = 1
+backend_flag1 = 'DISALLOW_TO_FAILOVER'
+
+enable_pool_hba = on
+pool_passwd = 'pool_passwd'
+connection_cache = off
+replication_mode = off
+replicate_select = off
+load_balance_mode = on
+master_slave_mode = on
+master_slave_sub_mode = 'stream'
+sr_check_user = 'pgpool'
+wd_lifecheck_user = 'pgpool'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;36---mudar-as-configurações-do-arquivo-de-conexâo&quot;&gt;3.6 - Mudar as configurações do arquivo de conexâo&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/pgpool2/pool_hba.conf&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;em algumas versoes este arquivo pode ter nome diferente&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;local   all         all                               md5
+host    all         all          127.0.0.1/32         md5
+host    all         all          ::1/128              md5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo pgpool reload&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;37---criar-um-usuario-através-do-pgpool-para-autenticação&quot;&gt;3.7 - Criar um usuario através do pgpool para autenticação&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo pg_md5 -u pgpool -m 123
+$ sudo pgpool reload
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;38---inicie-o-pgpool2&quot;&gt;3.8 - Inicie o pgpool2&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo service pgpool2 stop
+$ sudo pgpool -n -d -f /etc/pgpool2/pgpool.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;39---fazendo-uma-conexao&quot;&gt;3.9 - Fazendo uma conexao&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;aqui voce entrará no postgres&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ psql -p 5432 -U pgpool -d postgres&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Criando seu proprio banco de dados&lt;/p&gt;
+
+&lt;h4 id=&quot;41-na-maquina-10001&quot;&gt;4.1 Na maquina 10.0.0.1&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Crie o banco de dados que voce deseja&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- sudo su - postgres
+- createdb teste
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Adicione permissoes de conexoes nele&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/postgresql/10/main/pg_hba.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;host    teste      pgpool     10.0.0.3/32   md5   # the client
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;E garanta os privilegios para o usuario&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GRANT ALL PRIVILEGES ON DATABASE teste TO pgpool;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Reinicia para aplicar as configurações&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;sudo service postgresql restart&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;42-na-maquina-10002&quot;&gt;4.2 Na maquina 10.0.0.2&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Adicione permissoes de conexoes nele&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/postgresql/10/main/pg_hba.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;host    teste      pgpool     10.0.0.3/32   md5   # the client
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Reinicia para aplicar as configurações&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;sudo service postgresql restart&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">MONTANDO OS CLUSTERS:</summary></entry></feed>
