@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-05-07T12:37:23-03:00</updated><id>http://localhost:4000/</id><title type="html">Vinícius Morais Silva</title><entry><title type="html">PostgreSQL Replication and Load Balancing with pgpool-II</title><link href="http://localhost:4000/jekyll/update/2018/05/07/pgpool.html" rel="alternate" type="text/html" title="PostgreSQL Replication and Load Balancing with pgpool-II" /><published>2018-05-07T08:12:32-03:00</published><updated>2018-05-07T08:12:32-03:00</updated><id>http://localhost:4000/jekyll/update/2018/05/07/pgpool</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2018/05/07/pgpool.html">&lt;p&gt;MONTANDO OS CLUSTERS:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-05-09T14:14:15-03:00</updated><id>http://localhost:4000/</id><title type="html">Vinícius Morais Silva</title><entry><title type="html">PostgreSQL Replication and Load Balancing with pgpool-II</title><link href="http://localhost:4000/jekyll/update/2018/05/07/pgpool.html" rel="alternate" type="text/html" title="PostgreSQL Replication and Load Balancing with pgpool-II" /><published>2018-05-07T08:12:32-03:00</published><updated>2018-05-07T08:12:32-03:00</updated><id>http://localhost:4000/jekyll/update/2018/05/07/pgpool</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2018/05/07/pgpool.html">&lt;p&gt;MONTANDO OS CLUSTERS:&lt;/p&gt;
 
 &lt;p&gt;Maquina 1 : Master : (&lt;code class=&quot;highlighter-rouge&quot;&gt;10.0.0.1&lt;/code&gt;)&lt;/p&gt;
 
@@ -204,7 +204,7 @@ $ pg_basebackup -v -D main -R -P -h 10.0.0.1
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo vim /etc/pgpool2/pgpool.conf&lt;/code&gt;&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listen_addresses = ''
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listen_addresses = '*'
 port = 5432
 
 backend_hostname0 = '10.0.0.1'
@@ -241,7 +241,9 @@ host    all         all          127.0.0.1/32         md5
 host    all         all          ::1/128              md5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo pgpool reload&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo pgpool reload
+$ sudo service pgpool2 restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h4 id=&quot;37---criar-um-usuario-através-do-pgpool-para-autenticação&quot;&gt;3.7 - Criar um usuario através do pgpool para autenticação&lt;/h4&gt;
 
@@ -249,7 +251,15 @@ host    all         all          ::1/128              md5
 $ sudo pgpool reload
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h4 id=&quot;38---inicie-o-pgpool2&quot;&gt;3.8 - Inicie o pgpool2&lt;/h4&gt;
+&lt;h4 id=&quot;38---reinicie-o-pgpool2-novamente&quot;&gt;3.8 - Reinicie o pgpool2 novamente&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo pgpool reload
+$ sudo service pgpool2 restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Caso você queira debugar a execução do pgpool:&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo service pgpool2 stop
 $ sudo pgpool -n -d -f /etc/pgpool2/pgpool.conf
@@ -263,7 +273,7 @@ $ sudo pgpool -n -d -f /etc/pgpool2/pgpool.conf
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ psql -p 5432 -U pgpool -d postgres&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;Criando seu proprio banco de dados&lt;/p&gt;
+&lt;h2 id=&quot;criando-um-banco&quot;&gt;Criando um banco&lt;/h2&gt;
 
 &lt;h4 id=&quot;41-na-maquina-10001&quot;&gt;4.1 Na maquina 10.0.0.1&lt;/h4&gt;
 
@@ -292,13 +302,10 @@ $ sudo pgpool -n -d -f /etc/pgpool2/pgpool.conf
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Reinicia para aplicar as configurações&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;sudo service postgresql restart&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;Reinicie para aplicar as configurações&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo service postgresql restart&lt;/code&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;42-na-maquina-10002&quot;&gt;4.2 Na maquina 10.0.0.2&lt;/h4&gt;
 
@@ -312,10 +319,7 @@ $ sudo pgpool -n -d -f /etc/pgpool2/pgpool.conf
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Reinicia para aplicar as configurações&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;sudo service postgresql restart&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">MONTANDO OS CLUSTERS:</summary></entry></feed>
+  &lt;li&gt;Reinicie para aplicar as configurações&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ sudo service postgresql restart&lt;/code&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">MONTANDO OS CLUSTERS:</summary></entry></feed>

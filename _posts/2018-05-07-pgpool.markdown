@@ -188,7 +188,7 @@ $ pg_basebackup -v -D main -R -P -h 10.0.0.1
 `$ sudo vim /etc/pgpool2/pgpool.conf`
 
 ```
-listen_addresses = ''
+listen_addresses = '*'
 port = 5432
 
 backend_hostname0 = '10.0.0.1'
@@ -224,7 +224,10 @@ host    all         all          127.0.0.1/32         md5
 host    all         all          ::1/128              md5
 ```
 
-`$ sudo pgpool reload`
+```
+$ sudo pgpool reload
+$ sudo service pgpool2 restart
+```
 
 #### 3.7 - Criar um usuario através do pgpool para autenticação
 
@@ -233,7 +236,14 @@ $ sudo pg_md5 -u pgpool -m 123
 $ sudo pgpool reload
 ```
 
-#### 3.8 - Inicie o pgpool2
+#### 3.8 - Reinicie o pgpool2 novamente 
+
+```
+$ sudo pgpool reload
+$ sudo service pgpool2 restart
+```
+
+* Caso você queira debugar a execução do pgpool:
 
 ```
 $ sudo service pgpool2 stop
@@ -246,7 +256,7 @@ $ sudo pgpool -n -d -f /etc/pgpool2/pgpool.conf
 
 `$ psql -p 5432 -U pgpool -d postgres`
 
-Criando seu proprio banco de dados
+## Criando um banco
 
 #### 4.1 Na maquina 10.0.0.1
 
@@ -271,9 +281,9 @@ host    teste      pgpool     10.0.0.3/32   md5   # the client
 GRANT ALL PRIVILEGES ON DATABASE teste TO pgpool;
 ```
 
-* Reinicia para aplicar as configurações
+* Reinicie para aplicar as configurações
 
-- sudo service postgresql restart
+`$ sudo service postgresql restart`
 
 #### 4.2 Na maquina 10.0.0.2
 
@@ -285,6 +295,6 @@ GRANT ALL PRIVILEGES ON DATABASE teste TO pgpool;
 host    teste      pgpool     10.0.0.3/32   md5   # the client
 ```
 
-* Reinicia para aplicar as configurações
+* Reinicie para aplicar as configurações
 
-- sudo service postgresql restart
+`$ sudo service postgresql restart`
